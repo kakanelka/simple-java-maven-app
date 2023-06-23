@@ -1,20 +1,13 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.0'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-    stages {
-        stage('Build') {
-            steps {
+node {
+      checkout scm
+        docker.image('maven:3.9.2-eclipse-temurin-11').inside('-v /root/.m2:/root/.m2') {
+            stage('Build') {
+                sh 'mvn --version'                
                 sh 'mvn -B -DskipTests clean package'
             }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
+         stage('Test') {            
+            sh 'mvn test'
+            junit 'target/surefire-reports/*.xml'
+         }     
+        }    
     }
-}
