@@ -1,4 +1,4 @@
-ppipeline {
+pipeline {
     agent {
         docker {
             image 'maven:3.9.0'
